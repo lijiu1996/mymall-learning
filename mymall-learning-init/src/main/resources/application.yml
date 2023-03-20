@@ -1,0 +1,16 @@
+server:
+  port: 10001
+
+spring:
+  application:
+    name: mymall-learning
+  datasource:
+    url: jdbc:mysql://localhost:3306/mall_learning?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
+    username: cms
+    password: cms
+    driver-class-name: com.mysql.jdbc.Driver
+
+mybatis:
+  mapper-locations:
+    - classpath:mapper/*.xml
+    - classpath*:com/**/mapper/*.xml
