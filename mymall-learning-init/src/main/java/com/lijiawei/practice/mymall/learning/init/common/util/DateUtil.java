@@ -1,4 +1,4 @@
-package com.lijiawei.practice.mymall.learning.init.util;
+package com.lijiawei.practice.mymall.learning.init.common.util;
 
 import java.time.*;
 import java.time.format.DateTimeFormatter;
