@@ -26,7 +26,7 @@ public class UserLoginService {
         String authcode = RandomUtil.randomNumbers(6);
         String key = String.format(RedisConstant.REDIS_PREFIX_AUTH_CODE,telephone);
         commonRedisService.set(key,authcode,RedisConstant.REDIS_EXPIRE_AUTH_CODE);
-        return CommonResult.success(true,"成功生成验证码");
+        return CommonResult.success(authcode,"成功生成验证码");
     }
 
     public CommonResult verifyAuthCode(String telephone, String authCode) {

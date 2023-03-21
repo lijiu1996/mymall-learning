@@ -5,15 +5,15 @@ spring:
   application:
     name: mymall-learning
   datasource:
-    url: jdbc:mysql://127.0.0.1:3306/mall_learning?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
+    url: jdbc:mysql://127.0.0.1:3306/mall_learning?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai&useSSL=false
     username: root
     password: 123456
     driver-class-name: com.mysql.jdbc.Driver
   redis:
-    host: localhost
+    host: 192.168.254.11
     database: 0
     port: 6379
-    password:
+    password: 123456
     lettuce:
       pool:
         max-active: 8
