@@ -9,7 +9,18 @@ spring:
     username: root
     password: 123456
     driver-class-name: com.mysql.jdbc.Driver
-
+  redis:
+    host: localhost
+    database: 0
+    port: 6379
+    password:
+    lettuce:
+      pool:
+        max-active: 8
+        max-idle: 8
+        min-idle: 8
+        max-wait: 3000ms #获取连接超时时间
+    timeout: 3000ms #连接redis超时时间
 mybatis:
   mapper-locations:
     - classpath:mapper/*.xml
