@@ -4,6 +4,9 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@MapperScan("com.lijiawei.practice.mymall.learning.init.brand.mapper")
+@MapperScan(value = {
+        "com.lijiawei.practice.mymall.learning.init.brand.mapper",
+        "com.lijiawei.practice.mymall.learning.init.user.mapper"
+})
 public class MybatisConfig {
 }

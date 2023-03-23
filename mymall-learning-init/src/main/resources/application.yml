@@ -23,5 +23,9 @@ spring:
     timeout: 3000ms #连接redis超时时间
 mybatis:
   mapper-locations:
-    - classpath:mapper/*.xml
+    - classpath:mapper/**/*.xml
     - classpath*:mapper/*.xml
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+logging:
+  config: classpath:logback-spring.xml

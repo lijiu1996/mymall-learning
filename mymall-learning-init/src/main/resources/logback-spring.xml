@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="60 seconds" debug="false">
+    <contextName>logback</contextName>
+    <!-- 定义控制台输出匹配格式 -->
+    <substitutionProperty name="logging.pattern.console"
+                          value="%clr(%d{${LOG_DATEFORMAT_PATTERN:-yyyy-MM-dd HH:mm:ss.SSS}}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr([%X{requestId}]) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%ewtpc}"/>
+    <!-- 定义日志文件输出匹配格式 -->
+    <substitutionProperty name="logging.pattern.file"
+                          value="%d{${LOG_DATEFORMAT_PATTERN:-yyyy-MM-dd HH:mm:ss.SSS}} ${LOG_LEVEL_PATTERN:-%5p} ${PID:- } --- [%t] %-40.40logger{39} : %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%ewtpc}"/>
+
+    <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter"/>
+    <conversionRule conversionWord="wtpc" converterClass="org.springframework.boot.logging.logback.WhitespaceThrowableProxyConverter"/>
+    <conversionRule conversionWord="ewtpc" converterClass="org.springframework.boot.logging.logback.ExtendedWhitespaceThrowableProxyConverter"/>
+
+    <property name="path" value="${user.dir}/logs"></property>
+
+    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">   <!-- 控制台输出 -->
+        <layout class="ch.qos.logback.classic.PatternLayout"> <!-- 使用layout节点 -->
+            <pattern>${logging.pattern.console}</pattern> <!-- 格式引用 -->
+        </layout>
+    </appender>
+    <!-- 将每天的日志保存在一个文件之中 -->
+    <appender name="file_info" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <Prudent>true</Prudent>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!-- 时间策略 按照时间和大小进行归档 -->
+            <!--  设置日志保存路径           -->
+            <FileNamePattern>${path}/info/%d{yyyy-MM-dd}/%d{yyyy-MM-dd-HH}-%i.log</FileNamePattern>
+            <MaxHistory>2</MaxHistory><!-- 删除超过7天的日志文件 -->
+            <totalSizeCap>10Mb</totalSizeCap><!-- 超过最大大小会将早期日志删除-->
+            <maxFileSize>1Mb</maxFileSize><!-- 在时间点内超过该文件大小会生成一个下一个编号的日志文件-->
+            <cleanHistoryOnStart>true</cleanHistoryOnStart><!-- 听说有时候会不起作用 -->
+        </rollingPolicy>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>INFO</level> <!-- 保存ERROR及以上级别的日志 -->
+        </filter>
+        <encoder>
+            <Pattern>${logging.pattern.file}</Pattern>  <!-- 格式引用 -->
+            <charset class="java.nio.charset.Charset">UTF-8</charset>
+        </encoder>
+    </appender>
+<!--    <appender name="druidSqlFile" class="ch.qos.logback.core.rolling.RollingFileAppender">-->
+<!--        <Prudent>true</Prudent>-->
+<!--        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">-->
+<!--            &lt;!&ndash; 设置日志保存路径，本次按照月份创建日志目录，而后每天的文件归档到一组 &ndash;&gt;-->
+<!--            <FileNamePattern>druid-logs/%d{yyyy-MM}/yootk_druid_slow_sql_%d{yyyy-MM-dd}.log</FileNamePattern>-->
+<!--            <MaxHistory>365</MaxHistory>&lt;!&ndash; 删除超过365天的日志文件 &ndash;&gt;-->
+<!--        </rollingPolicy>-->
+<!--        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">-->
+<!--            <level>ERROR</level> &lt;!&ndash; 保存ERROR及以上级别的日志 &ndash;&gt;-->
+<!--        </filter>-->
+<!--        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">-->
+<!--            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %logger Line:%-3L - %msg%n</pattern>-->
+<!--            <charset>utf-8</charset>-->
+<!--        </encoder>-->
+<!--    </appender>-->
+
+<!--    <logger name="com.alibaba.druid.filter.stat.StatFilter" level="ERROR">-->
+<!--        <appender-ref ref="druidSqlFile"/>-->
+<!--    </logger>-->
+
+<!--    <logger name="com.lijiawei.lottery.common" level="WARN"/>  &lt;!&ndash; 局部日志级别 &ndash;&gt;-->
+
+    <root level="INFO"> <!-- 全局日志级别 -->
+        <appender-ref ref="console"/>
+<!--        <appender-ref ref="file_info"/>-->
+    </root>
+</configuration>
