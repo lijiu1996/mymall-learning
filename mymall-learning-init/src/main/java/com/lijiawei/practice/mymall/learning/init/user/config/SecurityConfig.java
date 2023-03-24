@@ -1,6 +1,7 @@
 package com.lijiawei.practice.mymall.learning.init.user.config;
 
 import com.lijiawei.practice.mymall.learning.init.user.bean.dto.AdminUserDetails;
+import com.lijiawei.practice.mymall.learning.init.user.config.component.JwtAuthenticationTokenFilter;
 import com.lijiawei.practice.mymall.learning.init.user.domain.UmsAdmin;
 import com.lijiawei.practice.mymall.learning.init.user.domain.UmsPermission;
 import com.lijiawei.practice.mymall.learning.init.user.service.UmsAdminService;
@@ -61,7 +62,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 ).permitAll()
                 .antMatchers("/admin/login", "/admin/register").permitAll() // 放行
                 .antMatchers(HttpMethod.OPTIONS).permitAll() // 放行跨域请求的OPTION
-                .antMatchers("/**").permitAll()  //测试时全部运行访问
+                .antMatchers("/**").permitAll()  //测试时放开注释保证全部接口能够访问
                 .anyRequest().authenticated();  // 除上面外的所有请求全部需要鉴权认证
         // 禁用缓存
 //        httpSecurity.headers().cacheControl();
@@ -107,10 +108,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         };
     }
 
-//    @Bean
-//    public JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter(){
-//        return new JwtAuthenticationTokenFilter();
-//    }
+    // 实践三 编写注册逻辑返回JWT token
+
+    /**
+     * 实践四 增加TokenFilter过滤器进行token的解析并且保存UserInfo
+     * @return
+     */
+    @Bean
+    public JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter(){
+        return new JwtAuthenticationTokenFilter();
+    }
 
     /**
      * 允许跨域调用的过滤器

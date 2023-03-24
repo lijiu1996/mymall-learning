@@ -114,6 +114,8 @@ public interface RedisService {
 
     abstract <T> Set<T> sMembers(String key);
 
+    <T> void sAllSet(String key, Set<T> dataSet);
+
     /**
      * 向Set结构中添加属性
      */
@@ -185,6 +187,8 @@ public interface RedisService {
     Long lPushAll(String key, Long time, Object... values);
 
     Long lPushAll(String key, List<?> dataList);
+
+    <T> List<T> lGetAll(String key);
 
     /**
      * 从List结构中移除属性

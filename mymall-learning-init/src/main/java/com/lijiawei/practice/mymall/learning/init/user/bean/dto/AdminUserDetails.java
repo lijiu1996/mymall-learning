@@ -2,6 +2,7 @@ package com.lijiawei.practice.mymall.learning.init.user.bean.dto;
 
 import com.lijiawei.practice.mymall.learning.init.user.domain.UmsAdmin;
 import com.lijiawei.practice.mymall.learning.init.user.domain.UmsPermission;
+import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,6 +15,7 @@ import java.util.stream.Collectors;
  * SpringSecurity 继承接口 自定义用户详情信息
  * Created by macro on 2018/4/26.
  */
+@Data
 public class AdminUserDetails implements UserDetails {
     private UmsAdmin umsAdmin;
     private List<UmsPermission> permissionList;

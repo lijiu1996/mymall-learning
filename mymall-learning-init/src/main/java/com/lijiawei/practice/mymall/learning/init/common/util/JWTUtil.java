@@ -4,16 +4,17 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import java.util.*;
 
+@Data
 @Slf4j
 @Component
 public class JWTUtil {
@@ -22,6 +23,10 @@ public class JWTUtil {
     private String secret;
     @Value("${jwt.expiration:3600000}") // 默认有效期一个小时
     private Long expiration;
+    @Value("${jwt.tokenHeader:Authorization}")
+    private String tokenHeader;
+    @Value("${jwt.tokenHead:Bearer}")
+    private String tokenHead;
 
     public String getUUID(){
         String uuid = UUID.randomUUID().toString().replaceAll("-", "");

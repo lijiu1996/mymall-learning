@@ -1,6 +1,7 @@
 package com.lijiawei.practice.mymall.learning.init.user.controller;
 
 import com.lijiawei.practice.mymall.learning.init.common.api.CommonResult;
+import com.lijiawei.practice.mymall.learning.init.common.util.JWTUtil;
 import com.lijiawei.practice.mymall.learning.init.user.bean.dto.UmsAdminLoginParam;
 import com.lijiawei.practice.mymall.learning.init.user.domain.UmsAdmin;
 import com.lijiawei.practice.mymall.learning.init.user.domain.UmsPermission;
@@ -26,9 +27,8 @@ public class UmsAdminController {
     @Autowired
     private UmsCustomService umsCustomService;
 
-    private String tokenHeader = "Authorization";
-
-    private String tokenHead = "Bearer";
+    @Autowired
+    private JWTUtil jwtUtil;
 
 //    @RequestMapping(value = "/register", method = RequestMethod.POST)
 //    public CommonResult<UmsAdmin> register(@RequestBody UmsAdmin umsAdminParam, BindingResult result) {
@@ -47,7 +47,7 @@ public class UmsAdminController {
         }
         Map<String, String> tokenMap = new HashMap<>();
         tokenMap.put("token", token);
-        tokenMap.put("tokenHead", tokenHead);
+        tokenMap.put("tokenHead", jwtUtil.getTokenHead());
         return CommonResult.success(tokenMap);
     }
 

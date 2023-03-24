@@ -2,10 +2,7 @@ package com.lijiawei.practice.mymall.learning.init.common.service.impl;
 
 import com.lijiawei.practice.mymall.learning.init.common.service.RedisService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.HashOperations;
-import org.springframework.data.redis.core.ListOperations;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.ValueOperations;
+import org.springframework.data.redis.core.*;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.stereotype.Service;
@@ -147,6 +144,15 @@ public class CommonRedisService implements RedisService {
     }
 
     @Override
+    public <T> void sAllSet(String key, Set<T> dataSet) {
+        // boundOperations 不用重复指定key
+        BoundSetOperations<String, Object> boundSetOperations = redisTemplate.boundSetOps(key);
+        for (T data : dataSet) {
+            boundSetOperations.add(data);
+        }
+    }
+
+    @Override
     public Long sAdd(String key, Object... values) {
         return redisTemplate.opsForSet().add(key, values);
     }
@@ -249,6 +255,11 @@ public class CommonRedisService implements RedisService {
     @Override
     public Long lPushAll(String key, List<?> dataList) {
         return redisTemplate.opsForList().rightPushAll(key, dataList);
+    }
+
+    @Override
+    public <T> List<T> lGetAll(String key) {
+        return (List<T>) redisTemplate.opsForList().range(key,0,-1);
     }
 
     // 根据值进行遍历删除

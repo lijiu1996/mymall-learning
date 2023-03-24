@@ -14,8 +14,11 @@ public class RedisConstant {
      *  后期如果进行了微服务拆分 将业务模块以及具体业务名合并
      */
 
-    public static final String REDIS_PREFIX_AUTH_CODE = "mall:login:authCode:%s";
+    public static final String REDIS_PREFIX_USER_AUTHCODE = "mall:user:authCode:%s";
 
-    public static final Long   REDIS_EXPIRE_AUTH_CODE = 120L;
+    public static final Long REDIS_EXPIRE_USER_AUTHCODE = 120L;
 
+    public static final String REDIS_PREFIX_USER_ID = "mall:user:id:%d";
+
+    public static final Long REDIS_EXPIRE_USER_ID = 3600L ;
 }

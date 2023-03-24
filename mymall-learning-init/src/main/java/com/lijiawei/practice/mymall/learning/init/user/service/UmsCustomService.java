@@ -1,15 +1,14 @@
 package com.lijiawei.practice.mymall.learning.init.user.service;
 
 import cn.hutool.core.util.RandomUtil;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lijiawei.practice.mymall.learning.init.common.api.CommonResult;
 import com.lijiawei.practice.mymall.learning.init.common.constant.RedisConstant;
 import com.lijiawei.practice.mymall.learning.init.common.service.impl.CommonRedisService;
+import com.lijiawei.practice.mymall.learning.init.common.util.JSONUtil;
 import com.lijiawei.practice.mymall.learning.init.common.util.JWTUtil;
 import com.lijiawei.practice.mymall.learning.init.common.util.RegexUtil;
 import com.lijiawei.practice.mymall.learning.init.user.bean.dto.AdminUserDetails;
-import org.hibernate.validator.constraints.NotEmpty;
+import com.lijiawei.practice.mymall.learning.init.user.domain.UmsAdmin;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -17,7 +16,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
@@ -48,8 +46,8 @@ public class UmsCustomService {
         }
         // 2. 生成验证码并保存到redis
         String code = RandomUtil.randomNumbers(6);
-        String key = String.format(RedisConstant.REDIS_PREFIX_AUTH_CODE,telephone);
-        commonRedisService.set(key,code,RedisConstant.REDIS_EXPIRE_AUTH_CODE);
+        String key = String.format(RedisConstant.REDIS_PREFIX_USER_AUTHCODE,telephone);
+        commonRedisService.set(key,code,RedisConstant.REDIS_EXPIRE_USER_AUTHCODE);
         return CommonResult.success(code,"成功生成验证码");
     }
 
@@ -58,7 +56,7 @@ public class UmsCustomService {
         if (RegexUtil.isPhoneInvalid(telephone) || RegexUtil.isCodeInvalid(authCode)) {
             return CommonResult.failed("手机号或者验证码格式错误");
         }
-        String code = commonRedisService.get(String.format(RedisConstant.REDIS_PREFIX_AUTH_CODE,telephone));
+        String code = commonRedisService.get(String.format(RedisConstant.REDIS_PREFIX_USER_AUTHCODE,telephone));
         boolean equals = authCode.equals(code);
         if (equals) {
             return CommonResult.success(true,"验证码校验成功");
@@ -73,24 +71,19 @@ public class UmsCustomService {
         // 1. 校验
         // 2. 查找手机号对应验证码是否正确
 
-        // 3. 查找对应用户是否存在
+        // 3. 校验用户名密码
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(username, password);
         Authentication authenticate = authenticationManager.authenticate(token);
         if (Objects.isNull(authenticate)) {
             throw new BadCredentialsException("登录失败,检查用户名密码");
         }
-        AdminUserDetails adminUserDetails = (AdminUserDetails) authenticate.getPrincipal();
-        // 4. 执行登录流程 将登录用户信息保存到redis中 并且生成jwtToken返回给前端
-        //      token中携带有userId --> 解析token得到userId 然后查询redis 拿到用户信息
-        Map<String,Object> jsonMap = new HashMap<>();
-        jsonMap.put("userName",username);
-        ObjectMapper objectMapper = new ObjectMapper();
-        String jsonString = null;
-        try {
-            jsonString = objectMapper.writeValueAsString(jsonMap);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
+        // 4. 校验通过后执行登录流程
+        // 将登录用户信息保存到redis中 并且生成jwtToken返回给前端
+        // 后续前端发来的token中携带有userId --> 解析token得到userId 然后查询redis 拿到用户信息
+        UmsAdmin umsAdmin = ((AdminUserDetails) authenticate.getPrincipal()).getUmsAdmin();
+        String key = String.format(RedisConstant.REDIS_PREFIX_USER_ID, umsAdmin.getId());
+        commonRedisService.set(key,umsAdmin,RedisConstant.REDIS_EXPIRE_USER_ID);
+        String jsonString = JSONUtil.obj2String(Map.of("id", umsAdmin.getId()));
         String jwtToken = jwtUtil.createJWT(jsonString);
 
         return jwtToken;
