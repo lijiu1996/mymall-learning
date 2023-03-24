@@ -120,16 +120,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     /**
+     * SpringSecurity拦截器拦截器更高 会导致原有的跨域配置失效 所以要重新配置
      * 允许跨域调用的过滤器
      */
     @Bean
     public CorsFilter corsFilter() {
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
         config.addAllowedOrigin("*");
         config.setAllowCredentials(true);
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
         FilterRegistrationBean bean = new FilterRegistrationBean(new CorsFilter(source));
         bean.setOrder(0);
