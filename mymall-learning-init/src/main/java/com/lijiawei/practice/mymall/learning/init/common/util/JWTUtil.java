@@ -33,13 +33,36 @@ public class JWTUtil {
         return uuid;
     }
 
+    //业务定制方法
+    public String createJWTByUserId(Long id) {
+        String jsonString = JSONUtil.obj2String(Map.of("id", id));
+        return createJWT(jsonString);
+    }
+
+    public Long getUserIdFromJWTToken(String jwtToken) {
+        Long userId = null;
+        try {
+            String jwtInfo = parseJWTInfo(jwtToken);
+            if (jwtInfo != null) {
+                HashMap<String,Long> map = JSONUtil.string2Obj(jwtInfo, HashMap.class);
+                if (map != null)
+                    userId = map.get("id");
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("JWT解析失败",e);
+        }
+        return userId;
+    }
+
+    //通用方法
+
     /**
      * 生成jtw
      * @param subject token中要存放的数据（json格式）
      * @return
      */
-    public String createJWT(String subject) {
-        JwtBuilder builder = getJwtBuilder(subject, null, getUUID());// 设置过期时间
+    public String createJWT(String jsonSubject) {
+        JwtBuilder builder = getJwtBuilder(jsonSubject, null, getUUID());// 设置过期时间
         return builder.compact();
     }
 
