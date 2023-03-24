@@ -67,24 +67,24 @@ public class UmsCustomService {
 
     // 根据手机号和验证码实现注册登录功能
     // 注册登录放在一起 如果手机号没有查到 那么就在数据库中搜索对应记录
+    /**
+     *  SpringSecurity 实践三 编写登录逻辑 代替原本的UsernamePasswordAuthenticationFilter完成自定义校验逻辑
+     *      实现校验成功向前端返回jwtToken功能
+     */
     public String login(String username, String password) {
         // 1. 校验
         // 2. 查找手机号对应验证码是否正确
-
         // 3. 校验用户名密码
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(username, password);
         Authentication authenticate = authenticationManager.authenticate(token);
-        if (Objects.isNull(authenticate)) {
-            throw new BadCredentialsException("登录失败,检查用户名密码");
-        }
         // 4. 校验通过后执行登录流程
+        // springSecurity 校验成功后会把数据封装进principal
         // 将登录用户信息保存到redis中 并且生成jwtToken返回给前端
         // 后续前端发来的token中携带有userId --> 解析token得到userId 然后查询redis 拿到用户信息
         UmsAdmin umsAdmin = ((AdminUserDetails) authenticate.getPrincipal()).getUmsAdmin();
         String key = String.format(RedisConstant.REDIS_PREFIX_USER_ID, umsAdmin.getId());
         commonRedisService.set(key,umsAdmin,RedisConstant.REDIS_EXPIRE_USER_ID);
-        String jsonString = JSONUtil.obj2String(Map.of("id", umsAdmin.getId()));
-        String jwtToken = jwtUtil.createJWT(jsonString);
+        String jwtToken = jwtUtil.createJWTByUserId(umsAdmin.getId());
 
         return jwtToken;
     }
