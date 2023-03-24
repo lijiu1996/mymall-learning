@@ -47,6 +47,10 @@ public class CommonResult<T> {
         return new CommonResult<T>(errorCode.getCode(), msg, null);
     }
 
+    public static <T> CommonResult<T> failed(long code, String msg) {
+        return new CommonResult<T>(code, msg, null);
+    }
+
     /**
      * 失败返回结果
      * @param message 提示信息

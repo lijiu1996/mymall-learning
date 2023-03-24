@@ -1,7 +1,6 @@
 package com.lijiawei.practice.mymall.learning.init.user.bean.dto;
 
 import lombok.Data;
-import org.hibernate.validator.constraints.NotEmpty;
 
 /**
  * 用户登录参数
@@ -9,8 +8,8 @@ import org.hibernate.validator.constraints.NotEmpty;
  */
 @Data
 public class UmsAdminLoginParam {
-    @NotEmpty(message = "用户名不能为空")
+//    @NotEmpty(message = "用户名不能为空")
     private String username;
-    @NotEmpty(message = "密码不能为空")
+//    @NotEmpty(message = "密码不能为空")
     private String password;
 }

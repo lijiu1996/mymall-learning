@@ -37,7 +37,7 @@ public class GlobalExceptionHandler {
         if (e instanceof BusinessException) {
             BusinessException be = (BusinessException) e;
             log.error("[业务异常]{}",e.getMessage(),e);
-            return CommonResult.failed(be);
+            return CommonResult.failed(be.getCode(),be.getMsg());
         } else {
             log.error("[系统异常]{}",e.getMessage(),e);
             return CommonResult.failed();

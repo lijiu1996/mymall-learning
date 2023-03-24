@@ -11,7 +11,7 @@ import lombok.Data;
  * @Version: 1.0
  */
 @Data
-public class BusinessException extends RuntimeException implements IReturnCode {
+public class BusinessException extends RuntimeException {
 
     private int code;
 
