@@ -7,8 +7,10 @@ import com.lijiawei.practice.mymall.learning.init.user.domain.UmsAdmin;
 import com.lijiawei.practice.mymall.learning.init.user.domain.UmsPermission;
 import com.lijiawei.practice.mymall.learning.init.user.service.UmsAdminService;
 import com.lijiawei.practice.mymall.learning.init.user.service.UmsCustomService;
+import org.checkerframework.common.util.report.qual.ReportUnqualified;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +28,9 @@ import java.util.Map;
 public class UmsAdminController {
     @Autowired
     private UmsCustomService umsCustomService;
+
+    @Autowired
+    private UmsAdminService adminService;
 
     @Autowired
     private JWTUtil jwtUtil;
@@ -51,9 +56,23 @@ public class UmsAdminController {
         return CommonResult.success(tokenMap);
     }
 
-//    @RequestMapping(value = "/permission/{adminId}", method = RequestMethod.GET)
-//    public CommonResult<List<UmsPermission>> getPermissionList(@PathVariable Long adminId) {
-//        List<UmsPermission> permissionList = adminService.getPermissionList(adminId);
-//        return CommonResult.success(permissionList);
-//    }
+    // 退出当前用户登录
+    @RequestMapping(value = "/logout",method = RequestMethod.GET)
+    public CommonResult logout() {
+        umsCustomService.logout();
+        return CommonResult.success("账号注销成功");
+    }
+
+    // 查询某一用户所拥有的全部权限
+    @RequestMapping(value = "/permission/{adminId}", method = RequestMethod.GET)
+    public CommonResult<List<UmsPermission>> getPermissionList(@PathVariable Long adminId) {
+        List<UmsPermission> permissionList = adminService.getPermissionList(adminId);
+        return CommonResult.success(permissionList);
+    }
+
+    @PreAuthorize("hasAuthority('ums:permission:fail')")
+    @RequestMapping(value = "/permission/testFailed", method = RequestMethod.GET)
+    public CommonResult testPermissionFailed() {
+        return CommonResult.success("通过了权限认证逻辑, 程序内部bug, 请定位");
+    }
 }

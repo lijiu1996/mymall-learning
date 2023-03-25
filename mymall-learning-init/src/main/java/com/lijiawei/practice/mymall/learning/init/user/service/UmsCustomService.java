@@ -14,6 +14,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
@@ -81,11 +82,20 @@ public class UmsCustomService {
         // springSecurity 校验成功后会把数据封装进principal
         // 将登录用户信息保存到redis中 并且生成jwtToken返回给前端
         // 后续前端发来的token中携带有userId --> 解析token得到userId 然后查询redis 拿到用户信息
-        UmsAdmin umsAdmin = ((AdminUserDetails) authenticate.getPrincipal()).getUmsAdmin();
-        String key = String.format(RedisConstant.REDIS_PREFIX_USER_ID, umsAdmin.getId());
-        commonRedisService.set(key,umsAdmin,RedisConstant.REDIS_EXPIRE_USER_ID);
-        String jwtToken = jwtUtil.createJWTByUserId(umsAdmin.getId());
+        AdminUserDetails userInfo = (AdminUserDetails) authenticate.getPrincipal();
+        Long id = userInfo.getUmsAdmin().getId();
+        String key = String.format(RedisConstant.REDIS_PREFIX_USER_ID, id);
+        commonRedisService.set(key,userInfo,RedisConstant.REDIS_EXPIRE_USER_ID);
+        String jwtToken = jwtUtil.createJWTByUserId(id);
 
         return jwtToken;
+    }
+
+    public void logout() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        AdminUserDetails userInfo = (AdminUserDetails) authentication.getPrincipal();
+        Long userId = userInfo.getUmsAdmin().getId();
+        String key = String.format(RedisConstant.REDIS_PREFIX_USER_ID,userId);
+        commonRedisService.del(key);
     }
 }

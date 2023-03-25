@@ -2,7 +2,10 @@ package com.lijiawei.practice.mymall.learning.init.user.bean.dto;
 
 import com.lijiawei.practice.mymall.learning.init.user.domain.UmsAdmin;
 import com.lijiawei.practice.mymall.learning.init.user.domain.UmsPermission;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import net.minidev.json.annotate.JsonIgnore;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,13 +19,11 @@ import java.util.stream.Collectors;
  * Created by macro on 2018/4/26.
  */
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class AdminUserDetails implements UserDetails {
     private UmsAdmin umsAdmin;
     private List<UmsPermission> permissionList;
-    public AdminUserDetails(UmsAdmin umsAdmin, List<UmsPermission> permissionList) {
-        this.umsAdmin = umsAdmin;
-        this.permissionList = permissionList;
-    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -58,6 +59,7 @@ public class AdminUserDetails implements UserDetails {
         return true;
     }
 
+    @JsonIgnore
     @Override
     public boolean isEnabled() {
         return umsAdmin.getStatus().equals(1);

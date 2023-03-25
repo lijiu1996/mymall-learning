@@ -6,7 +6,7 @@ import lombok.Data;
 /**
  * @author Li JiaWei
  * @ClassName: BusinessException
- * @Description:
+ * @Description:    自定义业务异常
  * @Date: 2023/3/24 16:28
  * @Version: 1.0
  */

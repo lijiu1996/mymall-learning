@@ -63,6 +63,10 @@
 
     <root level="INFO"> <!-- 全局日志级别 -->
         <appender-ref ref="console"/>
-<!--        <appender-ref ref="file_info"/>-->
+        <appender-ref ref="file_info"/>
     </root>
+
+    <logger name="com.lijiawei.practice.mymall.learning.init" level="DEBUG">
+
+    </logger>
 </configuration>

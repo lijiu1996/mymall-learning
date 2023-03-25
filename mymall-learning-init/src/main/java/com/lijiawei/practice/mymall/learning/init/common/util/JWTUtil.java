@@ -1,5 +1,6 @@
 package com.lijiawei.practice.mymall.learning.init.common.util;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
@@ -44,7 +45,7 @@ public class JWTUtil {
         try {
             String jwtInfo = parseJWTInfo(jwtToken);
             if (jwtInfo != null) {
-                HashMap<String,Long> map = JSONUtil.string2Obj(jwtInfo, HashMap.class);
+                HashMap<String,Long> map = JSONUtil.string2Obj(jwtInfo, new TypeReference<HashMap<String,Long>>() {});
                 if (map != null)
                     userId = map.get("id");
             }

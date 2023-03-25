@@ -3,10 +3,7 @@ package com.lijiawei.practice.mymall.learning.init.common.util;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.JavaType;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.*;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
@@ -29,9 +26,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Slf4j
 public class JSONUtil {
@@ -63,12 +58,18 @@ public class JSONUtil {
 
         // 设置date日期格式
         objectMapper.setDateFormat(new SimpleDateFormat(DATE_TIME_FORMAT));
-        // 序列化忽略null属性
+        //序列化的时候序列对象的那些属性
+        //JsonInclude.Include.NON_DEFAULT 属性为默认值不序列化
+        //JsonInclude.Include.ALWAYS      所有属性都序列化
+        //JsonInclude.Include.NON_EMPTY   属性为 空（“”） 或者为 NULL 不序列化
+        //JsonInclude.Include.NON_NULL    属性为NULL 不序列化
         objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-        // 忽略 在json字符串中存在 但是在对象中不存在的情况 防止错误
+        //反序列化时,遇到未知属性会不会报错
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES,false);
-        // 忽略无法转换的对象
+        // 如果是空对象的时候,不抛异常
         objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+        // 忽略 transient 修饰的属性
+        objectMapper.configure(MapperFeature.PROPAGATE_TRANSIENT_MARKER, true);
 
     }
 
@@ -246,4 +247,10 @@ public class JSONUtil {
 
     }
 
+    @Test
+    public void simpleTest1() {
+        String json = "{\"id\":3}";
+        Map<String,Long> hashMap = string2Obj(json, new TypeReference<HashMap<String,Long>>() {});
+        System.out.println("...");
+    }
 }
