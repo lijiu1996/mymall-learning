@@ -68,10 +68,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/swagger-resources/**",
                         "/v2/api-docs/**"
                 ).permitAll()
-                .antMatchers("/admin/login", "/admin/register").permitAll() // 放行
+                .antMatchers("/admin/login", "/admin/register").anonymous() // 仅允许匿名访问
                 .antMatchers(HttpMethod.OPTIONS).permitAll() // 放行跨域请求的OPTION
 //                .antMatchers("/**").permitAll()  //测试时放开注释保证全部接口能够访问
-                .anyRequest().authenticated();  // 除上面外的所有请求全部需要鉴权认证
+                .anyRequest().authenticated();  // 其余所有请求全部需要鉴权认证
 //         禁用缓存
         httpSecurity.headers().cacheControl();
 //        // 添加JWT filter
@@ -80,6 +80,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         httpSecurity.exceptionHandling()
                 .accessDeniedHandler(restfulAccessDeniedHandler)
                 .authenticationEntryPoint(restAuthenticationEntryPoint);
+        // security 开启跨域
+        httpSecurity.cors();
     }
 
     @Override
@@ -124,24 +126,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter(){
         return new JwtAuthenticationTokenFilter();
-    }
-
-    /**
-     * SpringSecurity拦截器拦截器更高 会导致原有的跨域配置失效 所以要重新配置
-     * 允许跨域调用的过滤器
-     */
-    @Bean
-    public CorsFilter corsFilter() {
-        CorsConfiguration config = new CorsConfiguration();
-        config.addAllowedOrigin("*");
-        config.setAllowCredentials(true);
-        config.addAllowedHeader("*");
-        config.addAllowedMethod("*");
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", config);
-        FilterRegistrationBean bean = new FilterRegistrationBean(new CorsFilter(source));
-        bean.setOrder(0);
-        return new CorsFilter(source);
     }
 
     @Bean
