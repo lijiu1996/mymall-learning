@@ -70,7 +70,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 ).permitAll()
                 .antMatchers("/admin/login", "/admin/register").anonymous() // 仅允许匿名访问
                 .antMatchers(HttpMethod.OPTIONS).permitAll() // 放行跨域请求的OPTION
-//                .antMatchers("/**").permitAll()  //测试时放开注释保证全部接口能够访问
+                .antMatchers("/**").permitAll()  //测试时放开注释保证全部接口能够访问
                 .anyRequest().authenticated();  // 其余所有请求全部需要鉴权认证
 //         禁用缓存
         httpSecurity.headers().cacheControl();
