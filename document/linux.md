@@ -33,12 +33,20 @@ systemctl disable gdm.service
 systemctl get-default
 systemctl set-default multi-user.target
 
+nohup命令
+后台运行服务，并把日志输出到当前文件夹下的zookeeper-out.file文件中
+nohup bin/zookeeper-server-start.sh config/zookeeper.properties > zookeeper-out.file 2>&1 &
+2>&1
+将标准错误 2 重定向到标准输出 &1 ，标准输出 &1 再被重定向输入到 runoob.log 文件中。
+
 ### 3. 监视
 
 top命令含义解读
 
 如何查找当前内存占用最大的进程
 top -b -o +%MEM | head -n 22(行数)
+
+df 命令
 
 
 ### 4. 文本
@@ -47,3 +55,8 @@ set命令学习
 
 -n 只显示匹配文本
 -i 原地修改文件
+
+### 5. curl
+
+curl -L 自动跳转
+    -X 方法

@@ -25,14 +25,16 @@ yum-config-manager \
 https://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo
 
 yum makecache fast
+
 -- 解决阿里云网址无法解析问题
-自己新增dns
+查询如何配置linux网卡 设置dns
 
 ### 4. 安装docker
 
 查看所有yum 软件版本
 yum list docker-ce --showduplicates | sort -r
 
+安装
 yum install -y docker-ce
 
 关闭防火墙
@@ -64,19 +66,60 @@ docker ps
 启动容器 es为例
 docker run --name containerName -p 80:80 -d nginx
 -p 将宿主机与容器端口进行映射 前面是宿主机端口 后面是容器端口
--d 后台
+-d 后台运行
 
 docker run -d --name elasticsearch --net somenetwork -p 9200:9200 -p 9300:9300 -e "discovery.type=single-node" elasticsearch:tag
 
 进入容器执行命令
 docker exec -it mn bash
 
-数据卷挂载
+数据卷挂载 docker -v 宿主机数据卷路径/容器内路径
+
+-- privileged=true 表示开放root权限
 
 容器内没有vi怎么修改文件
 sed -i -e 's#Welcome to nginx#传智教育欢迎您#g' -e 's#<head>#<head><meta charset="utf-8">#g' index.html
 
-### 6. docker高级篇
+容器自定义镜像 dockerfile
+* 基础环境运行时库
+* 定义环境变量
+* 安装
+* 程序入口
+
+文件例子
+FROM java:8-alpine
+COPY ./app.jar /tmp/app.jar
+EXPOSE 8090
+ENTRYPOINT java -jar /tmp/app.jar
+
+基于dockerfile构建镜像命令
+docker build -t image:tag .
+
+### 6. docker-compose
+
+docker compose 将容器启动命令整合到yml中 实现一键启动多个
+
+安装
+curl -L https://github.com/docker/compose/releases/download/1.29.2/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose
+chmod +x /usr/local/bin/docker-compose
+
+### 7. 安装gui工具 portainer
+
+
+docker pull portainer/portainer
+
+mkdir -p /home/portainer/data /home/portainer/public
+
+docker run -p 9000:9000  --name portainer \
+--restart=always \
+-v /var/run/docker.sock:/var/run/docker.sock \
+-v /home/portainer/data:/data \
+-d portainer/portainer-ce
+
+问题一
+注意安装ce版本 且不要随便汉化
+
+### 8. docker高级篇
 
 网络相关知识(搭建集群需要)
 
@@ -85,9 +128,13 @@ docker run -d --name es
         -e ”ES_JAVA_OPTS=-Xms512m -Xmx512m“
         -e "discovery.type=single.mode"
         -V
-        
 
-### 7. 笔记篇
+docker容器内安装命令 
+apt-get update
+apt-get install vim
+apt-get install iputils-ping
+
+### 7. 心得记录
 
 ### docker 安装redis 完整命令
 
