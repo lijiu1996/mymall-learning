@@ -87,7 +87,7 @@ replication 对partition的冗余复制
     消费者组中的消费者消费哪些消息其实是与partition挂钩的,一个partition消息只能被一个消费者消费
     
 消费者组保证顺序消费的概念 维护一个消费的偏移量  
-    维护了一个comsumer-offset topic 
+    维护了一个comsumer-offset topic
        
 ### 5. kafka 命令行使用
 
@@ -107,6 +107,33 @@ kafka-console-consumer --topic test --bootstrap-server 192.168.5.57:9092 --from-
 
 单播消息与多播消息命令
 --consumer-property group.id=
-                       
+
+如何往kafka集群发送消息
+
+kafka消息发送 同步发送和异步发送的概念
+
+发送消息的ack配置 0 1 -1 需要大于配置值以上的foller返回ok
+
+自动提交和手动提交offset的概念 自动提交 消息poll下来以后直接提交offset
+                           手动提交 消费完成以后提交offset
+
+关于拉取消息的一些细节配置 
+    如果没有la
+
+消费者的健康状态检查
+
+消费者指定主题消费 
+
+消费者进行回溯消费
+                    
 ### 6. kafka 集群配置                
 
+### 7. kafka 源码设计经验总结
+
+* 高可用
+
+leader选举机制
+冗余副本机制
+ISR机制
+
+* 高
