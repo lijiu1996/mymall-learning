@@ -151,7 +151,7 @@ docker run \
 --log-opt max-size=1m \
 -v /home/redis/data:/data \
 -v /home/redis/conf/redis.conf:/etc/redis/redis.conf \
--d redis:7.0.8 redis-server /etc/redis/redis.conf 
+-d redis:7 redis-server /etc/redis/redis.conf 
 
 3.编辑配置文件
 编辑redis.conf

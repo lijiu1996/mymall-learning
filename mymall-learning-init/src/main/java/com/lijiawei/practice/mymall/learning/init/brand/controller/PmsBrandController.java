@@ -37,8 +37,9 @@ public class PmsBrandController {
         int insert = pmsBrandService.insert(pmsBrand);
         if (insert == 1) {
             return CommonResult.success(pmsBrand);
-        } else
+        } else {
             return CommonResult.failed();
+        }
     }
 
     @PreAuthorize("hasAuthority('pms:brand:update')")
