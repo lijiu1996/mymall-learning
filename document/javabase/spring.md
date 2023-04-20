@@ -25,6 +25,13 @@ this
 args 匹配参数
 target 匹配当前执行方法的目标对象
 
+### Spring 扩展学习之全局异常处理
+
+原本同步@ControllerAdvice实现的全局异常处理存在一定问题
+即只能处理从Controller抛出的异常 不能处理从异步调用、定时调用或工具类中抛出的异常
+
+解决方案 自定义AOP代理实现异常捕获
+@AfterThrowing问题 异常在经过AfterThrowing处理后还会进一步向外抛出
 
 ### Spring原理学习
 

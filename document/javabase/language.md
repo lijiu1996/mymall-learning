@@ -4,8 +4,6 @@
 区分Throwable Error Exception RuntimeException 继承体系
 你真的会自定义Exception吗?
 
-### 泛型学习
-
 ### 函数式接口 学习
 
 ### optional 学习
@@ -47,3 +45,10 @@ TRACE 更详细的跟踪信息
     如何进行多级分组
 3. 自定义collector收集器 -- 深入分析了Collector的源码设计 nb
 4. 如何在lambda表达式中修改外部变量的值 比方说stream 次数统计等
+
+### Java 集合学习
+
+map.put compute putIfAbsent computeIfAbsent 区分
+
+put 设置一个key为某个value 返回设置之前的值
+compute 根据当前key 计算得到下一个key的值 并设置 返回覆盖后的值
